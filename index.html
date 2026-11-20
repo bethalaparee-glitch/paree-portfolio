@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paree Bethala — AI creative direction &amp; brand strategy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFFFFF; --ink:#000; --grey:#8A8A8A; --line:#E8E8E8; --pink:#F5B8CF;
+    --sans:"Geist", system-ui, sans-serif; --mono:"Geist Mono", ui-monospace, monospace;
+    --g:clamp(16px,2.4vw,32px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  :focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+  .mono{font-family:var(--mono);font-size:11px;line-height:1.4}
+
+  header.top{position:fixed;inset:0 0 auto;z-index:40;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:14px var(--g);background:rgba(255,255,255,.88);backdrop-filter:blur(8px)}
+  .logo{font-weight:600;font-size:17px;letter-spacing:-.02em}
+  .menu{display:flex;gap:4px}
+  .menu a{font-family:var(--mono);font-size:11px;padding:4px 8px;border-radius:3px}
+  .menu a:hover{background:var(--ink);color:#fff}
+  .top .right{justify-self:end;display:flex;gap:16px;align-items:center}
+  .cta{font-family:var(--mono);font-size:11px;background:var(--ink);color:#fff;padding:6px 10px;border-radius:3px}
+
+  /* ---------- hero stack ---------- */
+  .hero{position:relative;height:100svh;min-height:660px;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+  .stage{position:absolute;inset:0;perspective:1600px;perspective-origin:50% 0%}
+  .card{position:absolute;left:50%;transform-origin:50% 100%;border-radius:5px;overflow:hidden;background:#111;color:#fff;box-shadow:0 30px 60px -28px rgba(0,0,0,.5);will-change:transform,opacity;cursor:pointer}
+  .card img,.card video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .card .blur{position:absolute;inset:-30px;background-size:cover;background-position:center;filter:blur(22px) brightness(.55);transform:scale(1.1)}
+  .card.tall img,.card.tall video{object-fit:contain}
+  .card .brand{position:absolute;inset:0 0 auto;padding:14px 16px 30px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;z-index:2;background:linear-gradient(to bottom,rgba(0,0,0,.6),transparent)}
+  .card .brand b{font-weight:600;font-size:clamp(18px,2.2vw,34px);letter-spacing:-.035em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .card .brand .mono{white-space:nowrap}
+  .card img,.card video{transition:opacity .4s}
+  .card:not(.front) img,.card:not(.front) .blur{opacity:.5}
+  .card .playhint{position:absolute;right:12px;bottom:12px;z-index:2;font-family:var(--mono);font-size:11px;background:#fff;color:#000;padding:6px 10px;border-radius:3px;opacity:0;transition:opacity .3s}
+  .card.front .playhint{opacity:1}
+
+  .index{position:absolute;left:var(--g);top:50%;transform:translateY(-50%);z-index:6;list-style:none;display:flex;flex-direction:column;gap:2px}
+  .index button{font-size:14px;color:var(--grey);text-align:left;padding:2px 0;letter-spacing:-.01em;transition:color .2s}
+  .index button:hover{color:var(--ink)}
+  .index button.on{color:var(--ink);font-weight:500}
+  .index button.on::before{content:"";display:inline-block;width:14px;height:2px;background:var(--ink);vertical-align:middle;margin-right:8px}
+  .side{position:absolute;right:var(--g);top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;align-items:end;gap:14px}
+  .side .count{font-size:15px}
+  .side .count b{font-weight:500}
+  .arrows{display:flex;flex-direction:column;gap:8px}
+  .circ{width:46px;height:46px;border:1px solid var(--ink);border-radius:50%;display:grid;place-items:center;background:#fff;transition:background .2s,color .2s}
+  .circ:hover{background:var(--ink);color:#fff}
+  .circ:disabled{opacity:.25;pointer-events:none}
+  .circ svg{width:16px;height:16px}
+  .hint{position:absolute;left:50%;bottom:calc(var(--g) + 6px);transform:translateX(-50%);z-index:6;color:var(--grey)}
+  .bl{position:absolute;left:var(--g);bottom:var(--g);z-index:6}
+  .br{position:absolute;right:var(--g);bottom:var(--g);z-index:6}
+  .br a{font-family:var(--mono);font-size:11px;border:1px solid var(--ink);padding:6px 10px;border-radius:3px;background:#fff}
+  .mobile-name{display:none;font-weight:500;font-size:18px;letter-spacing:-.02em}
+
+  /* ---------- about ---------- */
+  .about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--g);padding:130px var(--g) 110px;border-top:1px solid var(--line)}
+  .about .mono{color:var(--grey);margin-bottom:14px}
+  .about h2{font-weight:500;font-size:clamp(36px,5vw,76px);letter-spacing:-.05em;line-height:.95;max-width:12ch}
+  .about .copy{display:flex;flex-direction:column;gap:18px;font-size:clamp(17px,1.4vw,20px);line-height:1.45;max-width:44ch}
+  .about .copy p:first-child{font-size:clamp(20px,1.8vw,26px);letter-spacing:-.02em;line-height:1.3}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chips span{font-family:var(--mono);font-size:11px;border:1px solid var(--ink);border-radius:99px;padding:5px 10px}
+
+  /* ---------- blocks ---------- */
+  .block{padding:0 var(--g) 110px}
+  .block .head{display:flex;justify-content:space-between;align-items:end;gap:16px;padding:18px 0;border-top:1px solid var(--ink);margin-bottom:var(--g)}
+  .block .head h2{font-weight:500;font-size:clamp(28px,3vw,40px);letter-spacing:-.035em}
+  .block .head .mono{color:var(--grey);text-align:right}
+
+  /* masonry of flip cards */
+  .wall{column-count:3;column-gap:calc(var(--g) * .8)}
+  .flip{break-inside:avoid;margin-bottom:calc(var(--g) * .8);perspective:1400px}
+  .flip .inner{position:relative;aspect-ratio:var(--ar);transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,.7,.2,1)}
+  .flip.turned .inner{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;border-radius:4px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+  .face.front{background:#111;color:#fff}
+  .face.front img,.face.front video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .face.front video{opacity:0;transition:opacity .3s}
+  .face.front video.ready{opacity:1}
+  .face.front .play{position:absolute;inset:0;z-index:1}
+  .face .brandline{position:absolute;inset:0 0 auto;padding:12px 14px 28px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;z-index:2;background:linear-gradient(to bottom,rgba(0,0,0,.55),transparent);pointer-events:none}
+  .face .brandline b{font-weight:600;font-size:19px;letter-spacing:-.03em;line-height:1.05}
+  .turn{position:absolute;right:10px;bottom:10px;z-index:3;font-family:var(--mono);font-size:11px;background:#fff;color:#000;border-radius:99px;padding:6px 11px}
+  .face.back{transform:rotateY(180deg);background:var(--ink);color:#fff;padding:18px;display:flex;flex-direction:column;justify-content:space-between}
+  .face.back .t{font-weight:600;font-size:19px;letter-spacing:-.03em;line-height:1.05}
+  .face.back .t span{display:block;font-family:var(--mono);font-size:11px;font-weight:400;color:#aaa;margin-top:6px;letter-spacing:0}
+  .face.back p{font-size:14px;line-height:1.45;color:#e8e8e8;max-width:38ch}
+  .face.back .row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .face.back .row button{font-family:var(--mono);font-size:11px;border:1px solid #fff;border-radius:99px;padding:6px 11px}
+  .face.back .row button.solid{background:#fff;color:#000}
+  .flip.tall .face.back p{font-size:15px}
+
+  /* reports */
+  .reports{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--g)}
+  .report{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr);gap:var(--g);align-items:end;background:#F4F4F4;border-radius:4px;padding:var(--g);text-align:left;width:100%}
+  .report .cover{position:relative;perspective:900px}
+  .report img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:2px;box-shadow:0 20px 40px -24px rgba(0,0,0,.45);transform-origin:left center;transition:transform .5s cubic-bezier(.3,.7,.2,1)}
+  .report:hover img{transform:rotateY(-14deg)}
+  .report h3{font-weight:500;font-size:clamp(22px,2.2vw,30px);letter-spacing:-.03em;line-height:1.05;margin-bottom:10px}
+  .report p{color:#444;font-size:14px;max-width:34ch}
+  .report .open{display:inline-block;margin-top:18px;font-family:var(--mono);font-size:11px;background:var(--ink);color:#fff;padding:7px 12px;border-radius:3px}
+  .report .mono{color:var(--grey);margin-top:10px}
+
+  .duo{display:flex;gap:14px;margin-top:40px;align-items:flex-start;perspective:900px}
+  .duo img{border-radius:4px;object-fit:cover;box-shadow:0 24px 40px -24px rgba(0,0,0,.45);transition:transform .25s ease-out}
+  .duo img:first-child{width:min(300px,52%);aspect-ratio:1088/720;margin-top:40px}
+  .duo img:last-child{width:min(170px,30%);aspect-ratio:9/16}
+
+
+  footer{position:relative;background:var(--pink);padding:var(--g);min-height:90svh;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
+  .fcols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--g)}
+  .fcols .mono{margin-bottom:6px;opacity:.6}
+  .fcols a{border-bottom:1px solid currentColor}
+  .copybtn{font-family:var(--mono);font-size:11px;border:1px solid var(--ink);padding:5px 9px;border-radius:3px;margin-top:8px}
+  .floaters{position:absolute;inset:0;pointer-events:none}
+  .fl{position:absolute;left:var(--x);top:var(--y);width:var(--w);border-radius:4px;transform:translate3d(var(--px,0),var(--py,0),0) rotate(var(--r));box-shadow:0 30px 50px -28px rgba(0,0,0,.5);transition:transform .3s ease-out}
+  .fcols,.fbottom{position:relative;z-index:2}
+  .fbig{position:relative;z-index:1;align-self:end;font-weight:600;font-size:clamp(60px,15.4vw,260px);letter-spacing:-.07em;line-height:.8;margin-top:80px;white-space:nowrap}
+  .fbottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:20px}
+
+  /* ---------- film player ---------- */
+  .lb{position:fixed;inset:0;z-index:60;background:#000;color:#fff;display:none;flex-direction:column}
+  .lb.open{display:flex}
+  .lb .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px var(--g)}
+  .lb .bar b{font-weight:600;font-size:22px;letter-spacing:-.03em;margin-right:12px}
+  .lb .bar span{color:#999}
+  .lb .bar .x{font-family:var(--mono);font-size:11px;border:1px solid #fff;padding:6px 10px;border-radius:3px}
+  .lb .stagev{flex:1;min-height:0;position:relative}
+  .lb video{position:absolute;top:0;bottom:0;left:76px;right:76px;width:calc(100% - 152px);height:100%;object-fit:contain;background:#000}
+  .lb .circ{position:absolute;top:50%;transform:translateY(-50%);background:transparent;border-color:#fff;color:#fff}
+  .lb .circ:hover{background:#fff;color:#000}
+  .lb .prev{left:14px}.lb .next{right:14px}
+
+  /* ---------- flipbook ---------- */
+  .book{position:fixed;inset:0;z-index:70;background:#ECECEC;display:none;flex-direction:column}
+  .book.open{display:flex}
+  .book .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px var(--g)}
+  .book .bar b{font-weight:600;font-size:22px;letter-spacing:-.03em;margin-right:12px}
+  .book .bar .x{font-family:var(--mono);font-size:11px;border:1px solid var(--ink);padding:6px 10px;border-radius:3px;background:#fff}
+  .book .shelf{flex:1;min-height:0;display:grid;place-items:center;padding:0 76px;position:relative}
+  .book .holder{width:100%;max-width:1100px}
+  .book .page{background:#fff;overflow:hidden}
+  .book .page .pg{width:100%;height:100%;background-color:#fff;background-repeat:no-repeat;background-size:100% 1000%}
+  .book .circ{position:absolute;top:50%;transform:translateY(-50%)}
+  .book .prev{left:14px}.book .next{right:14px}
+  .book .foot{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px var(--g) 18px}
+  .book input[type=range]{flex:1;max-width:520px;accent-color:#000}
+  .book .loading{position:absolute;color:var(--grey)}
+
+
+  @media (max-width:900px){
+    .menu{display:none}
+    header.top{grid-template-columns:1fr auto}
+    .index,.bl,.hint,.br{display:none}
+    .side{top:auto;bottom:calc(var(--g) + 30px);transform:none;flex-direction:row;align-items:center;left:var(--g);right:var(--g);justify-content:space-between}
+    .arrows{flex-direction:row}
+    .mobile-name{display:block}
+    .about{grid-template-columns:1fr;padding-top:90px;gap:28px}
+    .floaters .fl{display:none}
+    .wall{column-count:2}
+    .reports{grid-template-columns:1fr}
+    .fcols{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .book .shelf{padding:0 8px}
+    .lb video{left:0;right:0;width:100%}
+    .lb .circ,.book .circ{top:auto;bottom:-60px;transform:none}
+    .lb .prev,.book .prev{left:calc(50% - 56px)} .lb .next,.book .next{right:calc(50% - 56px)}
+    .lb .stagev,.book .shelf{margin-bottom:64px}
+    .book .foot span:last-child{display:none}
+  }
+  @media (max-width:520px){ .wall{column-count:1} .face.back p{font-size:15px} }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.flip .inner{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="logo" href="#top">Paree Bethala</a>
+  <nav class="menu" aria-label="Main">
+    <a href="#top">Films</a><a href="#about">About</a><a href="#all">All films</a><a href="#reports">Reports</a><a href="#contact">Contact</a>
+  </nav>
+  <div class="right"><span class="mono">In Milan</span><a class="cta" href="#contact">Get in touch</a></div>
+</header>
+
+<section class="hero" id="top" aria-label="Film stack">
+  <div class="stage" id="stage"></div>
+  <ul class="index" id="index" aria-label="Choose a film"></ul>
+  <div class="side">
+    <div class="mobile-name" id="mobileName"></div>
+    <div class="count"><b id="curN">01</b> / <span id="totN"></span></div>
+    <div class="arrows">
+      <button class="circ" type="button" id="prev" aria-label="Previous film"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10l5-5 5 5"/></svg></button>
+      <button class="circ" type="button" id="next" aria-label="Next film"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6l5 5 5-5"/></svg></button>
+    </div>
+  </div>
+  <div class="bl mono">AI creative direction<br>&amp; brand strategy</div>
+  <div class="hint mono">Scroll, drag or use the arrows</div>
+  <div class="br"><a href="#all">View all films</a></div>
+</section>
+
+<section class="about" id="about">
+  <div><p class="mono">About</p><h2>Hi, I'm Paree.</h2>
+    <div class="duo" aria-hidden="true">
+      <img class="tilt" src="stills/gm-gaurav-gupta-20.jpg" alt="">
+      <img class="tilt" src="stills/jacquemus-1-20.jpg" alt="">
+    </div>
+  </div>
+  <div class="copy">
+    <p>I'm obsessed with the space where fashion meets AI. I use AI to make films that feel like real campaigns, but the idea, the taste and the edit always come from me.</p>
+    <p>Every film starts with the brand, not the prompt. Who is it for? What does it stand for? What would make someone stop scrolling? That's the fashion business side of me, which I'm studying at Istituto Marangoni, now in Milan.</p>
+    <p>So far: four films for the Cartier Cross-Campus Challenge, full brand strategies for Gentle Monster and Dsquared2, and freelance work for brands that find me. Always up for the next one.</p>
+    <div class="chips"><span>AI creative direction</span><span>Brand strategy</span><span>Campaign films</span><span>Runway</span><span>Midjourney</span><span>Pika</span></div>
+  </div>
+</section>
+
+
+<section class="block" id="all">
+  <div class="head"><h2>All films</h2><span class="mono">Tap “Story” to flip a card</span></div>
+  <div class="wall" id="wall"></div>
+</section>
+
+<section class="block" id="reports">
+  <div class="head"><h2>Brand reports</h2><span class="mono">Open one to flip through every page</span></div>
+  <div class="reports">
+    <button class="report" type="button" data-book="gm">
+      <div class="cover"><img src="films/report-gm-001.jpg" alt="Gentle Monster brand report cover" loading="lazy"></div>
+      <div><h3>Gentle Monster</h3><p>How I'd launch Gentle Monster in India: a Delhi flagship, an Anish Kapoor collab, events, PR and the films above.</p><p class="mono">553 pages</p><span class="open">Open the book</span></div>
+    </button>
+    <button class="report" type="button" data-book="ds">
+      <div class="cover"><img src="films/report-dsquared2-001.jpg" alt="Dsquared2 brand report cover" loading="lazy"></div>
+      <div><h3>Dsquared2</h3><p>Who Dsquared2 is, who buys it and where it should go next, with AI campaign visuals.</p><p class="mono">281 pages, 2025</p><span class="open">Open the book</span></div>
+    </button>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="fcols">
+    <div><p class="mono">Email</p><a href="mailto:bethalaparee@gmail.com">bethalaparee@gmail.com</a><br><button class="copybtn" id="copy" type="button">Copy email</button></div>
+    <div><p class="mono">Where</p>In Milan</div>
+    <div><p class="mono">Studying</p>Fashion Business, Istituto Marangoni</div>
+    <div><p class="mono">Full portfolio</p><a href="https://drive.google.com/drive/folders/1cPdJju9pCVNUaXP1fXu5aebCCXYsP6ju?usp=sharing">Open on Drive</a></div>
+  </div>
+  <div class="floaters" aria-hidden="true">
+    <img class="fl" data-depth="22" style="--x:56%;--y:30%;--r:-6deg;--w:min(200px,22vw)" src="stills/diesel-20.jpg" alt="">
+    <img class="fl" data-depth="30" style="--x:36%;--y:38%;--r:4deg;--w:min(230px,24vw)" src="stills/gm-anish-kapoor-68.jpg" alt="">
+  </div>
+  <div class="fbig" aria-hidden="true">Paree Bethala</div>
+  <div class="fbottom mono"><span>© 2026</span><span>Independent AI concept films. Not commissioned by or affiliated with the brands or people shown.</span></div>
+</footer>
+
+<!-- film player -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Film player">
+  <div class="bar"><div><b id="lbT"></b><span id="lbS"></span></div><button class="x" id="lbClose" type="button">Close</button></div>
+  <div class="stagev" id="lbStage">
+    <button class="circ prev" id="lbPrev" type="button" aria-label="Previous film"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg></button>
+    <button class="circ next" id="lbNext" type="button" aria-label="Next film"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5"/></svg></button>
+  </div>
+  <div class="bar"><span></span><span class="mono" id="lbN"></span></div>
+</div>
+
+<!-- flipbook -->
+<div class="book" id="book" role="dialog" aria-modal="true" aria-label="Brand report">
+  <div class="bar"><div><b id="bkT"></b><span class="mono" id="bkSub"></span></div><button class="x" id="bkClose" type="button">Close</button></div>
+  <div class="shelf" id="shelf">
+    <span class="loading mono" id="bkLoading">Opening the book</span>
+    <div class="holder" id="holder"></div>
+    <button class="circ prev" id="bkPrev" type="button" aria-label="Previous page"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg></button>
+    <button class="circ next" id="bkNext" type="button" aria-label="Next page"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5"/></svg></button>
+  </div>
+  <div class="foot"><span class="mono" id="bkN"></span><input type="range" id="bkRange" min="0" value="0" aria-label="Jump to page"><span class="mono">Drag a corner, use the arrows or the slider</span></div>
+</div>
+
+<script src="pageflip.js"></script>
+<script>
+/* shape: w/h of the film */
+const FILMS = [
+  {brand:"Cartier", film:"Concept film I", id:"cartier-lucas-bravo", ar:16/9,
+   story:"Part of Love Eternal, my films for the Istituto Marangoni × Cartier challenge. A black-and-white goodbye at an airport slowly turns warm, and everything comes back to one red box left on a hotel bed."},
+  {brand:"Cartier", film:"Concept film II", id:"cartier-taylor-travis", ar:16/9,
+   story:"The second Love Eternal film. One day in Paris for a couple, from a room facing the Eiffel Tower to the Pont Alexandre III at dusk. Love as something you choose again every day."},
+  {brand:"Jacquemus", film:"Concept film I", id:"jacquemus-1", ar:9/16,
+   story:"Jacquemus is all sun, colour and a little absurd, so I leaned into that. A girl in the hills with balloons pulling her hair up into the sky. Made vertical, for the feed."},
+  {brand:"Jacquemus", film:"Concept film II", id:"jacquemus-2", ar:1280/768,
+   story:"What if Jacquemus opened in Mumbai? A butter stick on toast becomes the invite: a card that says Jacquemus, Kala Ghoda. Playful, like the brand, but local."},
+  {brand:"Ami Paris", film:"India", id:"ami-paris-india", ar:1280/854,
+   story:"Ami's heart logo, taken home to Mumbai. Morning light on the Sea Link, two people walking, and a red heart balloon floating up in front of the Gateway of India."},
+  {brand:"Miu Miu", film:"Concept film", id:"miu-miu", ar:16/9,
+   story:"Miu Miu girls are a bit of a contradiction, so: an old Milan street, a leather jacket, kitten heels on a skateboard. Pretty and rebellious at the same time."},
+  {brand:"Coperni", film:"Concept film", id:"coperni", ar:9/16,
+   story:"Coperni loves tech and scale, so this one plays with size. A giant face in a chainmail hood lies in the street while a tiny figure walks past, then cuts to the heels."},
+  {brand:"Diesel", film:"Concept film", id:"diesel", ar:9/16,
+   story:"Diesel is loud and a bit cheeky. Head-to-toe red leather down a European street, a bag with teeth, and an attitude that doesn't care who's looking."},
+  {brand:"Bacha Coffee", film:"Concept film", id:"baccha-coffee", ar:1,
+   story:"Bacha Coffee started in Marrakech in 1910. I imagined its first stop in India: a giant tin rolled up to the Gateway of India, like the brand is arriving by sea."},
+  {brand:"Gentle Monster × Gaurav Gupta", film:"Concept film", id:"gm-gaurav-gupta", ar:1088/720,
+   story:"Made for my Gentle Monster India launch project. Gaurav Gupta's sculptural style on Gentle Monster frames, shot like someone's peeking through a hotel door."},
+  {brand:"Gentle Monster × Anish Kapoor", film:"Concept film", id:"gm-anish-kapoor", ar:1280/768,
+   story:"The idea behind my Delhi flagship concept for Gentle Monster: a glossy red Kapoor-style form that opens into a butterfly. Art first, eyewear second."}
+].map(f => ({...f, src:`films/${f.id}.mp4`, poster:`films/${f.id}.jpg`}));
+const N = FILMS.length;
+const pad = n => String(n).padStart(2,'0');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ================= stack ================= */
+const stage = document.getElementById('stage');
+const cards = FILMS.map((f,i) => {
+  const el = document.createElement('div');
+  el.className = 'card' + (f.ar < 1.5 ? ' tall' : '');
+  el.innerHTML = `${f.ar < 1.5 ? `<div class="blur" style="background-image:url('${f.poster}')"></div>` : ''}<img src="${f.poster}" alt=""><div class="brand"><b>${f.brand}</b><span class="mono">${f.film}</span></div><span class="playhint">Play with sound</span>`;
+  const v = document.createElement('video');
+  v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'none';
+  v.style.opacity = 0; v.addEventListener('playing', () => v.style.opacity = 1);
+  el.insertBefore(v, el.querySelector('.brand')); el._v = v; el._src = f.src;
+  el.addEventListener('click', () => { if (moved) return; if (front === i) openLb(i); else go(i); });
+  stage.appendChild(el); return el;
+});
+
+/* size each card to its film's real shape, so portrait films show in full */
+let sizes = [], base = 0;
+function measure(){
+  const small = innerWidth < 900;
+  const cw = small ? innerWidth * .88 : Math.min(700, innerWidth * .56);
+  const maxH = small ? innerHeight * .42 : innerHeight * .56;
+  let h = cw * 9/16, w = cw;
+  if (h > maxH){ h = maxH; w = h * 16/9; }
+  sizes = FILMS.map(() => ({w, h}));
+  base = small ? 150 : innerHeight * .16;   // shared bottom line
+  cards.forEach((el,i) => {
+    const s = sizes[i];
+    el.style.width = s.w + 'px'; el.style.height = s.h + 'px';
+    el.style.marginLeft = (-s.w/2) + 'px'; el.style.bottom = base + 'px';
+  });
+}
+measure(); addEventListener('resize', () => { measure(); layout(true); });
+
+const index = document.getElementById('index');
+FILMS.forEach((f,i) => {
+  const li = document.createElement('li');
+  const b = document.createElement('button'); b.type='button';
+  const dup = FILMS.filter(x=>x.brand===f.brand).length > 1;
+  b.textContent = f.brand + (dup ? ' ' + f.film.replace('Concept film ','') : '');
+  b.onclick = () => go(i); li.appendChild(b); index.appendChild(li);
+});
+document.getElementById('totN').textContent = pad(N);
+
+let pos = 0, target = 0, front = -1;
+const clamp = v => Math.max(0, Math.min(N-1, v));
+function go(i){ target = clamp(i); }
+
+/* where every card sits when card f is in front */
+function restFor(f){
+  const small = innerWidth < 900;
+  const gap = small ? 38 : 54, depth = small ? 90 : 120;
+  const out = new Array(N);
+  let off = 0;
+  for (let i = f; i < N; i++){
+    if (i > f) off += gap + (sizes[i-1].h - sizes[i].h) * .85;
+    const d = i - f;
+    out[i] = {y:-off, z:-d*depth, rx:-24, op: d > 7 ? 0 : 1};
+  }
+  for (let i = f-1; i >= 0; i--){
+    const d = i - f;
+    out[i] = {y:-d*260, z:-d*80, rx:-24 + d*30, op:Math.max(0, 1 + d*1.4)};
+  }
+  return out;
+}
+function layout(){
+  const a = Math.floor(pos), b = Math.min(N-1, a+1), t = pos - a;
+  const A = restFor(a), B = restFor(b);
+  cards.forEach((el,i) => {
+    const p = A[i], q = B[i];
+    const y = p.y + (q.y-p.y)*t, z = p.z + (q.z-p.z)*t, rx = p.rx + (q.rx-p.rx)*t, op = p.op + (q.op-p.op)*t;
+    el.style.transform = `translate3d(0,${y}px,${z}px) rotateX(${rx}deg)`;
+    el.style.opacity = op;
+    el.style.zIndex = 100 - Math.round(Math.abs(i-pos)*10);
+    el.style.pointerEvents = op < .2 ? 'none' : 'auto';
+  });
+  const f = Math.round(clamp(pos));
+  if (f !== front) setFront(f);
+}
+function setFront(f){
+  front = f;
+  cards.forEach((el,i) => {
+    el.classList.toggle('front', i===f);
+    const v = el._v;
+    if (i===f && !lb.classList.contains('open') && !book.classList.contains('open')){ if (!v.src) v.src = el._src; v.play().catch(()=>{}); }
+    else v.pause();
+  });
+  [...index.querySelectorAll('button')].forEach((b,i)=>b.classList.toggle('on', i===f));
+  document.getElementById('curN').textContent = pad(f+1);
+  document.getElementById('mobileName').textContent = FILMS[f].brand;
+  document.getElementById('prev').disabled = f === 0;
+  document.getElementById('next').disabled = f === N-1;
+}
+function tick(){
+  pos += (target - pos) * (reduce ? 1 : .14);
+  if (Math.abs(target-pos) < .001) pos = target;
+  layout(); requestAnimationFrame(tick);
+}
+document.getElementById('prev').onclick = () => go(Math.round(target)-1);
+document.getElementById('next').onclick = () => go(Math.round(target)+1);
+
+const hero = document.getElementById('top');
+let snapT;
+hero.addEventListener('wheel', e => {
+  const dl = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+  if ((Math.round(target) >= N-1 && dl > 0) || (Math.round(target) <= 0 && dl < 0)) return;
+  e.preventDefault();
+  target = clamp(target + dl/350);
+  clearTimeout(snapT); snapT = setTimeout(()=> target = Math.round(target), 120);
+}, {passive:false});
+let sx=null, sy=null, st=0, moved=false, axis=null;
+hero.addEventListener('pointerdown', e => {
+  if (e.target.closest('button,a')) return;
+  sx = e.clientX; sy = e.clientY; st = target; moved = false; axis = null;
+});
+addEventListener('pointermove', e => {
+  if (sx === null) return;
+  const dx = e.clientX - sx, dy = e.clientY - sy;
+  if (!axis && Math.hypot(dx,dy) > 8) axis = (Math.abs(dx) > Math.abs(dy) || e.pointerType === 'mouse') ? 'x' : 'y';
+  if (!axis || (axis === 'y' && e.pointerType !== 'mouse')) return;
+  moved = true;
+  target = clamp(st + (axis === 'x' ? -dx : -dy) / 140);
+});
+addEventListener('pointerup', () => { if (sx !== null){ target = Math.round(target); sx = null; setTimeout(()=>moved=false, 0); }});
+addEventListener('pointercancel', () => { sx = null; target = Math.round(target); });
+addEventListener('keydown', e => {
+  if (lb.classList.contains('open') || book.classList.contains('open') || scrollY > innerHeight*.5) return;
+  if (e.key==='ArrowDown'||e.key==='ArrowRight'){ go(Math.round(target)+1); e.preventDefault(); }
+  if (e.key==='ArrowUp'||e.key==='ArrowLeft'){ go(Math.round(target)-1); e.preventDefault(); }
+});
+
+/* ================= flip cards ================= */
+const wall = document.getElementById('wall');
+FILMS.forEach((f,i) => {
+  const card = document.createElement('article');
+  card.className = 'flip' + (f.ar < 1.2 ? ' tall' : '');
+  card.style.setProperty('--ar', f.ar);
+  card.innerHTML = `<div class="inner">
+      <div class="face front">
+        <img src="${f.poster}" alt="" loading="lazy">
+        <button class="play" type="button" aria-label="Play ${f.brand}, ${f.film}"></button>
+        <div class="brandline"><b>${f.brand}</b><span class="mono">${f.film}</span></div>
+        <button class="turn" type="button">Story</button>
+      </div>
+      <div class="face back" aria-hidden="true">
+        <div class="t">${f.brand}<span>${f.film}</span></div>
+        <p>${f.story}</p>
+        <div class="row"><button class="solid watch" type="button">Watch</button><button class="unturn" type="button">Flip back</button></div>
+      </div>
+    </div>`;
+  const frontFace = card.querySelector('.front'), backFace = card.querySelector('.back');
+  let v = null;
+  frontFace.addEventListener('mouseenter', () => {
+    if (!v){ v = document.createElement('video'); v.muted=true; v.loop=true; v.playsInline=true; v.src=f.src;
+      v.addEventListener('playing', ()=>v.classList.add('ready')); frontFace.insertBefore(v, frontFace.querySelector('.play')); }
+    v.play().catch(()=>{});
+  });
+  frontFace.addEventListener('mouseleave', () => v && v.pause());
+  const turn = on => { card.classList.toggle('turned', on); backFace.setAttribute('aria-hidden', !on); frontFace.setAttribute('aria-hidden', on); if (v) v.pause(); };
+  card.querySelector('.turn').onclick = () => { turn(true); card.querySelector('.unturn').focus({preventScroll:true}); };
+  card.querySelector('.unturn').onclick = () => { turn(false); card.querySelector('.turn').focus({preventScroll:true}); };
+  card.querySelector('.play').onclick = () => openLb(i);
+  card.querySelector('.watch').onclick = () => openLb(i);
+  wall.appendChild(card);
+});
+
+/* ================= film player ================= */
+const lb = document.getElementById('lb'), ls = document.getElementById('lbStage');
+let cur = 0, back = null, pv = null;
+function render(){
+  const f = FILMS[cur];
+  document.getElementById('lbT').textContent = f.brand;
+  document.getElementById('lbS').textContent = f.film;
+  document.getElementById('lbN').textContent = `${pad(cur+1)} / ${pad(N)}`;
+  if (pv) pv.remove();
+  pv = document.createElement('video'); pv.src = f.src; pv.poster = f.poster; pv.controls = true; pv.autoplay = true; pv.playsInline = true;
+  ls.insertBefore(pv, ls.firstChild);
+}
+function step(d){ cur = (cur + d + N) % N; render(); }
+function openLb(i){
+  back = document.activeElement; cur = i; lb.classList.add('open'); render();
+  document.body.style.overflow='hidden'; cards.forEach(c=>c._v.pause());
+  document.getElementById('lbClose').focus();
+}
+function closeLb(){
+  lb.classList.remove('open'); if (pv){ pv.pause(); pv.remove(); pv=null; }
+  document.body.style.overflow=''; front=-1; back&&back.focus&&back.focus({preventScroll:true});
+}
+document.getElementById('lbClose').onclick = closeLb;
+document.getElementById('lbPrev').onclick = () => step(-1);
+document.getElementById('lbNext').onclick = () => step(1);
+
+/* ================= flipbook ================= */
+const BOOKS = {
+  gm:{title:"Gentle Monster", sub:"Brand report", dir:"reports/gm", pages:553},
+  ds:{title:"Dsquared2", sub:"Brand report", dir:"reports/ds", pages:281}
+};
+const book = document.getElementById('book'), holder = document.getElementById('holder');
+const range = document.getElementById('bkRange');
+let pf = null, bk = null, bookBack = null;
+const sheetOf = (b,i) => `${b.dir}/s-${String(Math.floor(i/10)).padStart(2,'0')}.jpg`;
+function loadAround(i){
+  if (!bk) return;
+  holder.querySelectorAll('.page').forEach((el,k) => {
+    if (Math.abs(k - i) <= 8){ const pg = el.querySelector('.pg'); if (!pg.dataset.on){ pg.dataset.on = 1; pg.style.backgroundImage = `url('${sheetOf(bk,k)}')`; pg.style.backgroundPosition = `0 ${(k % 10) / 9 * 100}%`; } }
+  });
+}
+function fitHolder(){
+  const shelf = document.getElementById('shelf');
+  const H = shelf.clientHeight - 20, W = shelf.clientWidth - (innerWidth < 900 ? 16 : 152);
+  const single = innerWidth < 900;
+  let ph = H, pw = ph * 3/4;
+  const need = single ? pw : pw*2;
+  if (need > W){ pw = single ? W : W/2; ph = pw * 4/3; }
+  return {pw:Math.floor(pw), ph:Math.floor(ph), single};
+}
+function openBook(key){
+  bookBack = document.activeElement; bk = BOOKS[key];
+  document.getElementById('bkT').textContent = bk.title;
+  document.getElementById('bkSub').textContent = `${bk.sub}, ${bk.pages} pages`;
+  book.classList.add('open'); document.body.style.overflow='hidden';
+  cards.forEach(c=>c._v.pause());
+  const {pw, ph, single} = fitHolder();
+  holder.innerHTML = '';
+  holder.style.maxWidth = (single ? pw : pw*2) + 'px';
+  const wrap = document.createElement('div'); holder.appendChild(wrap);
+  for (let i = 0; i < bk.pages; i++){
+    const p = document.createElement('div'); p.className = 'page';
+    if (i === 0 || i === bk.pages-1) p.dataset.density = 'hard';
+    p.innerHTML = `<div class="pg" role="img" aria-label="Page ${i+1}"></div>`;
+    wrap.appendChild(p);
+  }
+  pf = new St.PageFlip(wrap, {
+    width:pw, height:ph, size:'fixed', showCover:true, usePortrait:single,
+    maxShadowOpacity:.35, mobileScrollSupport:false, flippingTime:700, drawShadow:true
+  });
+  pf.loadFromHTML(wrap.querySelectorAll('.page'));
+  loadAround(0);
+  range.max = bk.pages - 1; range.value = 0; updBk(0);
+  document.getElementById('bkLoading').style.display = 'none';
+  pf.on('flip', e => { loadAround(e.data); updBk(e.data); });
+  document.getElementById('bkClose').focus();
+}
+function updBk(i){
+  document.getElementById('bkN').textContent = `Page ${i+1} of ${bk.pages}`;
+  range.value = i;
+}
+function closeBook(){
+  book.classList.remove('open'); document.body.style.overflow='';
+  if (pf){ try{ pf.destroy(); }catch(_){} pf = null; }
+  holder.innerHTML = ''; bk = null; front = -1;
+  bookBack && bookBack.focus && bookBack.focus({preventScroll:true});
+}
+document.querySelectorAll('[data-book]').forEach(b => b.onclick = () => openBook(b.dataset.book));
+document.getElementById('bkClose').onclick = closeBook;
+document.getElementById('bkPrev').onclick = () => pf && pf.flipPrev();
+document.getElementById('bkNext').onclick = () => pf && pf.flipNext();
+range.addEventListener('input', () => { const i = +range.value; loadAround(i); pf && pf.turnToPage(i); updBk(i); });
+
+addEventListener('keydown', e => {
+  if (lb.classList.contains('open')){
+    if (e.key==='Escape') closeLb(); if (e.key==='ArrowRight') step(1); if (e.key==='ArrowLeft') step(-1);
+  } else if (book.classList.contains('open')){
+    if (e.key==='Escape') closeBook(); if (e.key==='ArrowRight') pf&&pf.flipNext(); if (e.key==='ArrowLeft') pf&&pf.flipPrev();
+  }
+});
+
+/* ================= small things ================= */
+document.getElementById('copy').addEventListener('click', async e => {
+  const b = e.currentTarget;
+  try{ await navigator.clipboard.writeText('bethalaparee@gmail.com'); b.textContent='Email copied'; }catch(_){ b.textContent='Select the address to copy'; }
+  setTimeout(()=>b.textContent='Copy email',2200);
+});
+
+
+/* ================= tilt + parallax ================= */
+document.querySelectorAll('.tilt').forEach(el => {
+  el.addEventListener('pointermove', e => {
+    const r = el.getBoundingClientRect(), x = (e.clientX - r.left)/r.width - .5, y = (e.clientY - r.top)/r.height - .5;
+    el.style.transform = `rotateY(${x*16}deg) rotateX(${-y*16}deg) scale(1.04)`;
+  });
+  el.addEventListener('pointerleave', () => el.style.transform = '');
+});
+const foot = document.getElementById('contact');
+foot.addEventListener('pointermove', e => {
+  const r = foot.getBoundingClientRect(), x = (e.clientX - r.left)/r.width - .5, y = (e.clientY - r.top)/r.height - .5;
+  foot.querySelectorAll('.fl').forEach(f => { const d = +f.dataset.depth; f.style.setProperty('--px', (-x*d) + 'px'); f.style.setProperty('--py', (-y*d) + 'px'); });
+});
+
+
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
