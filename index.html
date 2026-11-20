@@ -118,7 +118,7 @@
   .duo img:last-child{width:min(170px,30%);aspect-ratio:9/16}
 
 
-  footer{position:relative;background:var(--pink);padding:var(--g);min-height:90svh;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
+  footer{position:relative;background:var(--pink);padding:var(--g);min-height:70svh;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
   .fcols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--g)}
   .fcols .mono{margin-bottom:6px;opacity:.6}
   .fcols a{border-bottom:1px solid currentColor}
@@ -126,7 +126,7 @@
   .floaters{position:absolute;inset:0;pointer-events:none}
   .fl{position:absolute;left:var(--x);top:var(--y);width:var(--w);border-radius:4px;transform:translate3d(var(--px,0),var(--py,0),0) rotate(var(--r));box-shadow:0 30px 50px -28px rgba(0,0,0,.5);transition:transform .3s ease-out}
   .fcols,.fbottom{position:relative;z-index:2}
-  .fbig{position:relative;z-index:1;align-self:end;font-weight:600;font-size:clamp(60px,15.4vw,260px);letter-spacing:-.07em;line-height:.8;margin-top:80px;white-space:nowrap}
+  .fbig{position:relative;z-index:1;align-self:end;font-weight:600;font-size:clamp(52px,13.6vw,240px);letter-spacing:-.06em;line-height:.85;margin-top:80px;white-space:nowrap}
   .fbottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:20px}
 
   /* ---------- film player ---------- */
@@ -249,10 +249,6 @@
     <div><p class="mono">Where</p>In Milan</div>
     <div><p class="mono">Studying</p>Fashion Business, Istituto Marangoni</div>
     <div><p class="mono">Full portfolio</p><a href="https://drive.google.com/drive/folders/1cPdJju9pCVNUaXP1fXu5aebCCXYsP6ju?usp=sharing">Open on Drive</a></div>
-  </div>
-  <div class="floaters" aria-hidden="true">
-    <img class="fl" data-depth="22" style="--x:56%;--y:30%;--r:-6deg;--w:min(200px,22vw)" src="stills/diesel-20.jpg" alt="">
-    <img class="fl" data-depth="30" style="--x:36%;--y:38%;--r:4deg;--w:min(230px,24vw)" src="stills/gm-anish-kapoor-68.jpg" alt="">
   </div>
   <div class="fbig" aria-hidden="true">Paree Bethala</div>
   <div class="fbottom mono"><span>© 2026</span><span>Independent AI concept films. Not commissioned by or affiliated with the brands or people shown.</span></div>
@@ -591,11 +587,6 @@ document.querySelectorAll('.tilt').forEach(el => {
     el.style.transform = `rotateY(${x*16}deg) rotateX(${-y*16}deg) scale(1.04)`;
   });
   el.addEventListener('pointerleave', () => el.style.transform = '');
-});
-const foot = document.getElementById('contact');
-foot.addEventListener('pointermove', e => {
-  const r = foot.getBoundingClientRect(), x = (e.clientX - r.left)/r.width - .5, y = (e.clientY - r.top)/r.height - .5;
-  foot.querySelectorAll('.fl').forEach(f => { const d = +f.dataset.depth; f.style.setProperty('--px', (-x*d) + 'px'); f.style.setProperty('--py', (-y*d) + 'px'); });
 });
 
 
