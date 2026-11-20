@@ -83,7 +83,10 @@
   .flip{break-inside:avoid;margin-bottom:calc(var(--g) * .8);perspective:1400px}
   .flip .inner{position:relative;aspect-ratio:var(--ar);transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,.7,.2,1)}
   .flip.turned .inner{transform:rotateY(180deg)}
-  .face{position:absolute;inset:0;border-radius:4px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+  .face{position:absolute;inset:0;border-radius:4px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:visibility 0s .3s}
+  .face.front{transform:rotateY(0deg) translateZ(1px)}
+  .flip.turned .face.front{visibility:hidden}
+  .flip:not(.turned) .face.back{visibility:hidden}
   .face.front{background:#111;color:#fff}
   .face.front img,.face.front video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .face.front video{opacity:0;transition:opacity .3s}
@@ -92,7 +95,7 @@
   .face .brandline{position:absolute;inset:0 0 auto;padding:12px 14px 28px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;z-index:2;background:linear-gradient(to bottom,rgba(0,0,0,.55),transparent);pointer-events:none}
   .face .brandline b{font-weight:600;font-size:19px;letter-spacing:-.03em;line-height:1.05}
   .turn{position:absolute;right:10px;bottom:10px;z-index:3;font-family:var(--mono);font-size:11px;background:#fff;color:#000;border-radius:99px;padding:6px 11px}
-  .face.back{transform:rotateY(180deg);background:var(--ink);color:#fff;padding:18px;display:flex;flex-direction:column;justify-content:space-between}
+  .face.back{transform:rotateY(180deg) translateZ(1px);background:var(--ink);color:#fff;padding:18px;display:flex;flex-direction:column;justify-content:space-between}
   .face.back .t{font-weight:600;font-size:19px;letter-spacing:-.03em;line-height:1.05}
   .face.back .t span{display:block;font-family:var(--mono);font-size:11px;font-weight:400;color:#aaa;margin-top:6px;letter-spacing:0}
   .face.back p{font-size:14px;line-height:1.45;color:#e8e8e8;max-width:38ch}
@@ -147,14 +150,17 @@
   .book.open{display:flex}
   .book .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px var(--g)}
   .book .bar b{font-weight:600;font-size:22px;letter-spacing:-.03em;margin-right:12px}
+  @media (max-width:900px){.book .bar b{display:block;margin:0 0 2px}}
   .book .bar .x{font-family:var(--mono);font-size:11px;border:1px solid var(--ink);padding:6px 10px;border-radius:3px;background:#fff}
   .book .shelf{flex:1;min-height:0;display:grid;place-items:center;padding:0 76px;position:relative}
   .book .holder{width:100%;max-width:1100px}
   .book .page{background:#fff;overflow:hidden}
-  .book .page .pg{width:100%;height:100%;background-color:#fff;background-repeat:no-repeat;background-size:100% 1000%}
+  .book .page .pg{width:100%;height:100%;background-color:#fff;background-repeat:no-repeat;background-size:100% 1000%;image-rendering:auto}
   .book .circ{position:absolute;top:50%;transform:translateY(-50%)}
   .book .prev{left:14px}.book .next{right:14px}
-  .book .foot{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px var(--g) 18px}
+  .book .rot{display:none}
+  @media (orientation:landscape){.book .foot .rot{display:none!important}}
+  .book .foot{position:relative;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px var(--g) 18px}
   .book input[type=range]{flex:1;max-width:520px;accent-color:#000}
   .book .loading{position:absolute;color:var(--grey)}
 
@@ -177,6 +183,18 @@
     .lb .prev,.book .prev{left:calc(50% - 56px)} .lb .next,.book .next{right:calc(50% - 56px)}
     .lb .stagev,.book .shelf{margin-bottom:64px}
     .book .foot span:last-child{display:none}
+    .book .foot{flex-wrap:wrap}
+    .book .foot .rot{display:block!important;flex-basis:100%;order:3;text-align:center;color:var(--grey);pointer-events:none}
+  }
+  @media (max-height:520px) and (orientation:landscape){
+    .book .bar{padding:6px 14px}
+    .book .bar b{display:inline;font-size:17px}
+    .book #bkSub{display:none}
+    .book .shelf{margin-bottom:0!important;padding:0 60px!important}
+    .book .circ{top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;width:40px;height:40px}
+    .book .prev{left:10px!important} .book .next{right:10px!important}
+    .book .foot{padding:4px 14px 8px}
+    .book .foot .rot{display:none!important}
   }
   @media (max-width:520px){ .wall{column-count:1} .face.back p{font-size:15px} }
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.flip .inner{transition:none}}
@@ -273,7 +291,7 @@
     <button class="circ prev" id="bkPrev" type="button" aria-label="Previous page"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg></button>
     <button class="circ next" id="bkNext" type="button" aria-label="Next page"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l5 5-5 5"/></svg></button>
   </div>
-  <div class="foot"><span class="mono" id="bkN"></span><input type="range" id="bkRange" min="0" value="0" aria-label="Jump to page"><span class="mono">Drag a corner, use the arrows or the slider</span></div>
+  <div class="foot"><span class="mono" id="bkN"></span><span class="mono rot">Turn your phone sideways for bigger pages</span><input type="range" id="bkRange" min="0" value="0" aria-label="Jump to page"><span class="mono">Drag a corner, use the arrows or the slider</span></div>
 </div>
 
 <script src="pageflip.js"></script>
@@ -514,11 +532,10 @@ function loadAround(i){
 }
 function fitHolder(){
   const shelf = document.getElementById('shelf');
-  const H = shelf.clientHeight - 20, W = shelf.clientWidth - (innerWidth < 900 ? 16 : 152);
-  const single = innerWidth < 900;
+  const H = shelf.clientHeight - 10, W = shelf.clientWidth - (innerWidth < 900 && innerHeight > 520 ? 12 : (innerWidth < 900 ? 130 : 152));
+  const single = false;               // always show the book as a two-page spread
   let ph = H, pw = ph * 3/4;
-  const need = single ? pw : pw*2;
-  if (need > W){ pw = single ? W : W/2; ph = pw * 4/3; }
+  if (pw*2 > W){ pw = W/2; ph = pw * 4/3; }
   return {pw:Math.floor(pw), ph:Math.floor(ph), single};
 }
 function openBook(key){
@@ -560,6 +577,10 @@ function closeBook(){
 }
 document.querySelectorAll('[data-book]').forEach(b => b.onclick = () => openBook(b.dataset.book));
 document.getElementById('bkClose').onclick = closeBook;
+let lastBook = null, rT;
+addEventListener('resize', () => { if (!book.classList.contains('open') || !bk) return; clearTimeout(rT);
+  rT = setTimeout(() => { const key = Object.keys(BOOKS).find(k => BOOKS[k] === bk), at = pf ? pf.getCurrentPageIndex() : 0;
+    if (pf){ try{ pf.destroy(); }catch(_){} pf = null; } openBook(key); if (at) { loadAround(at); pf.turnToPage(at); updBk(at); } }, 250); });
 document.getElementById('bkPrev').onclick = () => pf && pf.flipPrev();
 document.getElementById('bkNext').onclick = () => pf && pf.flipNext();
 range.addEventListener('input', () => { const i = +range.value; loadAround(i); pf && pf.turnToPage(i); updBk(i); });
